@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using CS_chatApp.Data;
-
+using CS_chatApp.Hubs;
 
 DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +12,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR();
 builder.Services.AddDbContext<DatabaseContext>(
     opt =>
     {
@@ -40,5 +41,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<ChatHub>("/r/chat");
+
 
 app.Run();
