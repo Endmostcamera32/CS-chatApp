@@ -16,14 +16,14 @@ builder.Services.AddSignalR();
 builder.Services.AddDbContext<DatabaseContext>(
     opt =>
     {
-      opt.UseNpgsql(connectionString);
-      if (builder.Environment.IsDevelopment())
-      {
-        opt
-          .LogTo(Console.WriteLine, LogLevel.Information)
-          .EnableSensitiveDataLogging()
-          .EnableDetailedErrors();
-      }
+        opt.UseNpgsql(connectionString);
+        if (builder.Environment.IsDevelopment())
+        {
+            opt
+              .LogTo(Console.WriteLine, LogLevel.Information)
+              .EnableSensitiveDataLogging()
+              .EnableDetailedErrors();
+        }
     }
 );
 
@@ -44,5 +44,8 @@ app.MapControllers();
 
 app.MapHub<ChatHub>("/r/chat");
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.MapFallbackToFile("index.html");
 
 app.Run();
