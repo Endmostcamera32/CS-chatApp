@@ -10,7 +10,7 @@ namespace CS_chatApp.Models
         public int ChannelId { get; set; }
         public string? ChannelName { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public List<Message> Messages { get; set; }
+        public List<Message>? Messages { get; set; }
 
     }
 }

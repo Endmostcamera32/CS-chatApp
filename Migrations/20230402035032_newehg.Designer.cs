@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CS_chatApp.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20230402030342_new")]
-    partial class @new
+    [Migration("20230402035032_newehg")]
+    partial class newehg
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,7 +54,7 @@ namespace CS_chatApp.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MessageId"));
 
-                    b.Property<int>("ChannelId")
+                    b.Property<int?>("ChannelId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("CreatedAt")
@@ -62,18 +62,15 @@ namespace CS_chatApp.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<string>("Text")
-                        .IsRequired()
+                    b.Property<string>("FakeUserName")
                         .HasColumnType("text");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<string>("Text")
+                        .HasColumnType("text");
 
                     b.HasKey("MessageId");
 
                     b.HasIndex("ChannelId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Messages");
                 });
@@ -99,27 +96,12 @@ namespace CS_chatApp.Migrations
                 {
                     b.HasOne("CS_chatApp.Models.Channel", "Channel")
                         .WithMany("Messages")
-                        .HasForeignKey("ChannelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CS_chatApp.Models.User", "User")
-                        .WithMany("Messages")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ChannelId");
 
                     b.Navigation("Channel");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CS_chatApp.Models.Channel", b =>
-                {
-                    b.Navigation("Messages");
-                });
-
-            modelBuilder.Entity("CS_chatApp.Models.User", b =>
                 {
                     b.Navigation("Messages");
                 });

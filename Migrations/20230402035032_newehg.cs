@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CS_chatApp.Migrations
 {
     /// <inheritdoc />
-    public partial class @new : Migration
+    public partial class newehg : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -45,10 +45,10 @@ namespace CS_chatApp.Migrations
                 {
                     MessageId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Text = table.Column<string>(type: "text", nullable: false),
+                    Text = table.Column<string>(type: "text", nullable: true),
+                    FakeUserName = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true, defaultValueSql: "now()"),
-                    ChannelId = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: false)
+                    ChannelId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -57,25 +57,13 @@ namespace CS_chatApp.Migrations
                         name: "FK_Messages_Channels_ChannelId",
                         column: x => x.ChannelId,
                         principalTable: "Channels",
-                        principalColumn: "ChannelId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Messages_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ChannelId");
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_ChannelId",
                 table: "Messages",
                 column: "ChannelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Messages_UserId",
-                table: "Messages",
-                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -85,10 +73,10 @@ namespace CS_chatApp.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
-                name: "Channels");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Channels");
         }
     }
 }

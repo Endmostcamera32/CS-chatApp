@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CS_chatApp.Data;
 using CS_chatApp.Models;
+using Microsoft.AspNetCore.SignalR;
+using CS_chatApp.Hubs;
 
 namespace CS_chatApp.Controllers
 {
@@ -15,10 +13,12 @@ namespace CS_chatApp.Controllers
     public class MessagesController : ControllerBase
     {
         private readonly DatabaseContext _context;
+        private readonly IHubContext<ChatHub> _hub;
 
-        public MessagesController(DatabaseContext context)
+        public MessagesController(DatabaseContext context, IHubContext<ChatHub> hub)
         {
             _context = context;
+            _hub = hub;
         }
 
         // GET: api/Messages
@@ -94,6 +94,16 @@ namespace CS_chatApp.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetMessage", new { id = message.MessageId }, message);
+        }
+
+        [HttpPost("{channelId}/Messages")]
+        public async Task<Message> PostChannelMessage(Message message)
+        {
+             _context.Messages.Add(message);
+            await _context.SaveChangesAsync();
+            await _hub.Clients.All.SendAsync("ReceiveMessages", message.FakeUserName, message.Text);
+
+            return message;
         }
 
         // DELETE: api/Messages/5

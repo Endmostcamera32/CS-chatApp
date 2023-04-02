@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CS_chatApp.Data;
 using CS_chatApp.Models;
+using Microsoft.AspNetCore.SignalR;
+using CS_chatApp.Hubs;
 
 namespace CS_chatApp.Controllers
 {
@@ -15,6 +17,8 @@ namespace CS_chatApp.Controllers
     public class ChannelsController : ControllerBase
     {
         private readonly DatabaseContext _context;
+        private readonly IHubContext<ChatHub> _hub;
+
 
         public ChannelsController(DatabaseContext context)
         {
@@ -81,21 +85,6 @@ namespace CS_chatApp.Controllers
             return NoContent();
         }
 
-        [HttpPost("{channelId}/Messages")]
-        public async Task<Message> PostChannelMessage(int channelId, Message Messages)
-        {
-            if (_context.Channels == null)
-            {
-                return null;
-            }
-            Messages.ChannelId = channelId;
-            _context.Messages.Add(Messages);
-            await _context.SaveChangesAsync();
-
-            return Messages;
-        }
-
-
         // POST: api/Channels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -110,6 +99,9 @@ namespace CS_chatApp.Controllers
 
             return CreatedAtAction("GetChannel", new { id = channel.ChannelId }, channel);
         }
+
+
+
 
         // DELETE: api/Channels/5
         [HttpDelete("{id}")]

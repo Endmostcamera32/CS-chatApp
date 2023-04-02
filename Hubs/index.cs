@@ -10,6 +10,7 @@ public class ChatHub : Hub
         // await Clients.All.ReceiveMessage(message);
         Console.WriteLine("user: " + user);
         Console.WriteLine("Message: " + message);
+        await Clients.All.SendAsync("ReceiveMessages", user, message);
     }
     public override Task OnConnectedAsync()
     {
