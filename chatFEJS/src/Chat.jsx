@@ -4,21 +4,10 @@ import axios from "axios";
 
 import ChatWindow from "./ChatWindow.jsx";
 import ChatInput from "./ChatInput.jsx";
-import ChannelBox from "./Channels.jsx"
 
 const Chat = () => {
   const { connection } = useSignalR("/r/chat");
   const [chat, setChat] = useState([]);
-  const [channels, setChannel] = useState([]);
-
-  useEffect(() => {
-    axios.get("/api/channels").then((result) => {
-      // console.log(result);
-      result.data.map((m) => {
-        setChannel((channels) => [...channels, <ChannelBox ChannelName={m.channelName} />]);
-      });
-    });
-  }, []);
 
   useEffect(() => {
     axios.get("/api/messages").then((result) => {
@@ -55,6 +44,11 @@ const Chat = () => {
     }
   };
 
+  async function handleDeleteText(e) {
+    e.preventDefault();
+    await axios.delete(`/api/delete/`)
+  }
+
   return (
     <div>
       <h1>SignalR Chat</h1>
@@ -62,16 +56,9 @@ const Chat = () => {
       <br></br>
       <br></br>
       <br></br>
-      {channels}
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
       <ChatInput sendMessage={sendMessage} />
       <hr />
-      <ChatWindow chat={chat} />
+      <ChatWindow chat={chat} />{" "}
     </div>
   );
 };
