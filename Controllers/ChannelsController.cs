@@ -25,10 +25,10 @@ namespace CS_chatApp.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Channel>>> GetChannels()
         {
-          if (_context.Channels == null)
-          {
-              return NotFound();
-          }
+            if (_context.Channels == null)
+            {
+                return NotFound();
+            }
             return await _context.Channels.ToListAsync();
         }
 
@@ -36,10 +36,10 @@ namespace CS_chatApp.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Channel>> GetChannel(int id)
         {
-          if (_context.Channels == null)
-          {
-              return NotFound();
-          }
+            if (_context.Channels == null)
+            {
+                return NotFound();
+            }
             var channel = await _context.Channels.FindAsync(id);
 
             if (channel == null)
@@ -81,15 +81,30 @@ namespace CS_chatApp.Controllers
             return NoContent();
         }
 
+        [HttpPost("{channelId}/Messages")]
+        public async Task<Message> PostChannelMessage(int channelId, Message Messages)
+        {
+            if (_context.Channels == null)
+            {
+                return null;
+            }
+            Messages.ChannelId = channelId;
+            _context.Messages.Add(Messages);
+            await _context.SaveChangesAsync();
+
+            return Messages;
+        }
+
+
         // POST: api/Channels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Channel>> PostChannel(Channel channel)
         {
-          if (_context.Channels == null)
-          {
-              return Problem("Entity set 'DatabaseContext.Channels'  is null.");
-          }
+            if (_context.Channels == null)
+            {
+                return Problem("Entity set 'DatabaseContext.Channels'  is null.");
+            }
             _context.Channels.Add(channel);
             await _context.SaveChangesAsync();
 

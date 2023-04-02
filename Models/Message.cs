@@ -7,15 +7,12 @@ namespace CS_chatApp.Models
 {
     public class Message
     {
-        public Message(int messageId, string text, DateTime createdAt) {
-            MessageId = messageId;
-            Text = text;
-            CreatedAt = createdAt;
-        }
-        public int MessageId {get; set;}
-        public string Text {get; set;}
-        public DateTime CreatedAt {get; set;}
-        public int ChannelId {get; set;}
-        public Channel? Channel {get; set;}
+        public int MessageId { get; set; }
+        public string Text { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public int ChannelId { get; set; }
+        public Channel? Channel { get; set; }
+        public int UserId { get; set; }
+        public User? User { get; set; }
     }
 }
